@@ -1,7 +1,13 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
-export default function CooldownTimer({ until }) {
+// CooldownTimer — Phase 1.3: live countdown for a connection in rate-limit
+// cooldown. Ticks every second while the window is open, renders nothing once
+// expired.
+
+export default function CooldownTimer({ until, prefix = "⏱" }) {
   const [remaining, setRemaining] = useState("");
 
   useEffect(() => {
@@ -31,12 +37,17 @@ export default function CooldownTimer({ until }) {
   if (!remaining) return null;
 
   return (
-    <span className="text-xs text-orange-500 font-mono">
-      ⏱ {remaining}
+    <span
+      className="inline-flex items-center gap-1 rounded-md border border-orange-500/30 bg-orange-500/10 px-1.5 py-0.5 font-mono text-[10px] font-medium leading-none text-orange-600 dark:text-orange-400"
+      title="Rate-limit cooldown"
+    >
+      <span aria-hidden="true">{prefix}</span>
+      {remaining}
     </span>
   );
 }
 
 CooldownTimer.propTypes = {
   until: PropTypes.string.isRequired,
+  prefix: PropTypes.string,
 };

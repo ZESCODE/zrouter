@@ -77,9 +77,11 @@ const normalize = (value) => {
  * This is the preferred strategy — no external CLI required.
  */
 function extractTokensViaBetterSqlite(dbPath) {
-  // Dynamic require so the route stays importable even if native bindings fail
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const Database = require("better-sqlite3");
+  // Indirect require so webpack never statically resolves better-sqlite3 —
+  // it is an OPTIONAL native dependency and the build must succeed without it
+  // (this route falls back to the sqlite3 CLI / manual export).
+  // eslint-disable-next-line @typescript-eslint/no-require-imports, no-eval
+  const Database = eval("require")("better-sqlite3");
   const db = new Database(dbPath, { readonly: true, fileMustExist: true });
 
   const query = (key) => {

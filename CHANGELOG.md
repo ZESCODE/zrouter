@@ -1,3 +1,47 @@
+# Unreleased
+
+## Dashboard — ZES Frost provider-management rebuild (OmniRoute merge)
+
+Rebuilt the provider-management UI with the ZES Frost glassmorphic design
+system and OmniRoute-grade provider management, merged from
+`ZESCODE/zesrouter` (`omniroute-provider-source`):
+
+- **Design**: added the ZES Frost Design System v1.0 to `globals.css`
+  (`.glass`, `.glass-strong`, `.glass-card`, `.glass-btn-*`, `.glass-input`,
+  `.glass-frost-blue/green/orange/red`, `.glass-skeleton`,
+  `.glass-modal-backdrop`, `.frost-bg`) with light + dark variants
+- **Providers page** (`/dashboard/providers`): rich provider cards with
+  service-kind badges (LLM, Embedding, Image, TTS, STT, Web Search, Video),
+  provider health status (healthy/degraded/offline), connected/total
+  connection badges, live cooldown countdowns, error-classification tags,
+  quick actions (test / configure / logs), and an All / Configured / Compact
+  display-mode toggle
+- **Error classification engine** (`shared/utils/errorClassifier.js`,
+  `shared/constants/errorTypes.js`): every connection error classified as
+  AUTH (401/403) / RATE_LIMITED (429) / SERVER (5xx) / NETWORK (timeout) /
+  RUNTIME (model not found) / CREDITS / BANNED / UNKNOWN with badge variants
+- **Connection management** (provider detail page): paginated connection
+  panel with search + health filters, bulk select/enable/disable/test/delete,
+  per-row inline actions (retest — auto-refreshes OAuth tokens, enable,
+  edit, delete, proxy-pool assignment, auto-ping), rate-limit protection and
+  quota-visibility toggles, priority reorder, and cooldown timers
+- **Provider registry** (`shared/constants/providerRegistry.js`): unified
+  registry over the open-sse provider catalog with categories, family
+  aliases, service-kind mapping, metadata, and free-tier tracking
+- **Provider Stats** (new page `/dashboard/provider-stats` +
+  `GET /api/provider-stats`): provider performance ranking, model usage
+  heatmap, 14-day cost trend, error-rate trend, latency distribution
+  (p50/p95/p99), provider comparison charts, 30s live refresh
+- **Routing & Fallbacks** (collapsible card on the providers page): drag to
+  reorder provider priority, per-provider rate limits (RPM/TPM), cost
+  thresholds, fallback chains (`fallbackStrategy` / `stickyRoundRobinLimit`
+  — consumed by the router in `src/sse/services/auth.js`), and health-check
+  intervals
+- **Build**: `better-sqlite3` imports are now webpack-resilient
+  (`webpackIgnore` / indirect require) so builds succeed on machines without
+  the optional native dependency (runtime already falls back to node:sqlite
+  / sql.js)
+
 # v0.5.55 (2026-08-14)
 
 ## Features
